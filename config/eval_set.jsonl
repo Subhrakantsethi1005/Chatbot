@@ -1,0 +1,38 @@
+# Quality tests for the knowledge base (one JSON object per line).
+# In-scope items: the answer must contain every expected keyword and/or come from one of the expected questions.
+# Out-of-scope items (should_escalate): the bot must hand over to staff instead of answering.
+{"id": "no-coding", "question": "I have no coding experience at all, can I still join this course?", "expected_keywords": ["perfect"]}
+{"id": "trust", "question": "Why should I trust Nullclass with my money?", "expected_keywords": ["9000"]}
+{"id": "prereq", "question": "What are the prerequisites for this bootcamp?", "expected_keywords": ["laptop"]}
+{"id": "refund", "question": "What happens if I don't like the bootcamp, do I get a refund?", "expected_keywords": ["refund"]}
+{"id": "lifetime", "question": "Will I have lifetime access after buying?", "expected_questions": ["Does this bootcamp have lifetime access?", "Once purchased, is this course available for lifetime access?"]}
+{"id": "duration", "question": "How long does the bootcamp take to complete?", "expected_keywords": ["3 months"]}
+{"id": "full-time", "question": "Can I attend the bootcamp while working a full time job?", "expected_keywords": ["self paced"]}
+{"id": "job-help", "question": "Do you provide job assistance after the course?", "expected_keywords": ["resume"]}
+{"id": "emi", "question": "Is there an EMI option to pay?", "expected_questions": ["Do we have an EMI option?"]}
+{"id": "internship", "question": "Do you offer a virtual internship?", "expected_questions": ["Do you provide any virtual internship?"]}
+{"id": "job-guarantee", "question": "Will this course guarantee me a job?", "expected_questions": ["Will this course guarantee me a job?", "Will this project and internship guarantee me a job?"]}
+{"id": "resume", "question": "Can I add this course to my resume?", "expected_questions": ["Can I add this course to my resume?", "Can I add this course to my resume? If Yes, how?"]}
+{"id": "no-laptop", "question": "I don't have a laptop. Can I still take this course?", "expected_keywords": ["laptop"], "expected_questions": ["I don’t have a laptop, can I take this course?"]}
+{"id": "pl300", "question": "Will this course help me prepare for the PL-300 Microsoft exam?", "expected_keywords": ["pl 300"]}
+{"id": "upgrades", "question": "Will the course be upgraded when Power BI gets new features?", "expected_keywords": ["upgraded"]}
+{"id": "tableau-user", "question": "I use Tableau, can I still take this course?", "expected_questions": ["I use tableau, can I take this course?"]}
+{"id": "pbi-vs-tableau", "question": "Which one is better, Power BI or Tableau?", "expected_keywords": ["contextual"]}
+{"id": "mac", "question": "Does Power BI work on Mac OS?", "expected_questions": ["Does Power BI work in Mac OS/Ubuntu?", "How can I use PowerBI on my Mac system?"]}
+{"id": "power-pivot", "question": "How do I enable Power Pivot before using it for the first time?", "expected_questions": ["How do I enable Power Pivot before using it for the first time ?", "How to install power pivot if its not available in system?"]}
+{"id": "sum-excel", "question": "Why is the SUM() function not working in my Excel?", "expected_questions": ["Why SUM() function not working in my Excel?"]}
+{"id": "ba-vs-da", "question": "What is the difference between a business analyst and a data analyst?", "expected_questions": ["What is the difference between Business Analyst Vs Data Analyst"]}
+{"id": "dax-time", "question": "What is the distinction between SAMEPERIODLASTYEAR, PARALLELPERIOD and DATEADD?", "expected_keywords": ["sameperiodlastyear"]}
+{"id": "vlookup-formula", "question": "My VLookup is showing the formula instead of the result", "expected_questions": ["My Excel Excel VLookup() showing formula instead of result"]}
+{"id": "foreign-key", "question": "Can you explain what a foreign key is?", "expected_keywords": ["foreign key"]}
+{"id": "sql-practice", "question": "How do I become good and comfortable with SQL?", "expected_keywords": ["practice"]}
+{"id": "contact", "question": "How can I contact the instructors for doubts and support?", "expected_questions": ["How can I contact the instructors for any doubts/support?", "How can I get help if I have a doubt and need support?"]}
+{"id": "db-design", "question": "Do data analysts need to learn database design?", "expected_questions": ["Do data analysts need to learn database design?"]}
+{"id": "who", "question": "who are you?", "expected_keywords": ["virtual assistant"]}
+{"id": "pq-source", "question": "How do I update the source in Power Query?", "expected_questions": ["How do I update source in power query ?"]}
+{"id": "pending-changes", "question": "Power BI says there are pending changes in your queries that haven't been applied", "expected_keywords": ["power query"]}
+{"id": "oos-capital", "question": "What is the capital of France?", "should_escalate": true}
+{"id": "oos-flight", "question": "Can you book a flight ticket to Mumbai for me?", "should_escalate": true}
+{"id": "oos-weather", "question": "What will the weather be like tomorrow?", "should_escalate": true}
+{"id": "oos-pizza", "question": "Recommend a good pizza place nearby", "should_escalate": true}
+{"id": "human", "question": "I want to talk to a human agent please", "should_escalate": true}

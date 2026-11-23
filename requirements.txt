@@ -1,7 +1,7 @@
-langchain==0.0.339
-python-dotenv==1.0.0
-streamlit==1.22.0
-tiktoken==0.4.0
-faiss-cpu==1.7.4
-protobuf~=3.19.0
-sentence-transformer== 2.2.2
+# Chatbot app + knowledge-base pipeline.
+# The pipeline itself (src/kb_pipeline) uses only the Python standard library (3.11+).
+streamlit>=1.22
+tzdata>=2024.1    # IANA timezone names on Windows (only if schedule.timezone is not "local")
+
+# Tests
+pytest>=7

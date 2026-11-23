@@ -1,0 +1,72 @@
+# Knowledge-base pipeline configuration.
+# Times are 24-hour HH:MM in [schedule].timezone. Relative paths are resolved
+# from the project folder. Unknown keys are rejected, so typos fail loudly.
+
+[paths]
+sources_dir = "dataset"               # documents to ingest: .csv / .json / .md / .txt
+data_dir = "kb_data"                  # versions, quarantine, logs, state (git-ignored)
+eval_set = "config/eval_set.jsonl"    # quality tests run before every activation
+
+[schedule]
+update_time = "02:00"                 # daily update time
+days = []                             # [] = every day, or e.g. ["mon", "thu"]
+timezone = "local"                    # "local", "UTC" or an IANA name like "Asia/Kolkata"
+retry_delays_minutes = [15, 30, 60]   # back-off after the 1st, 2nd and 3rd consecutive failure
+poll_seconds = 30                     # how often the daemon checks schedules and health
+
+[maintenance_window]
+# Approved updates are only activated inside this window (may cross midnight).
+start = "01:00"
+end = "05:00"
+days = []
+
+[health]
+watch_minutes = 5                     # roll back automatically if a check fails within this time
+check_interval_seconds = 30
+max_latency_ms = 500                  # per smoke question
+failure_threshold = 1                 # consecutive failed checks that trigger a rollback
+max_error_rate = 0.2                  # live chat error rate that counts as unhealthy
+min_samples = 5                       # live requests needed before the error rate is judged
+# smoke_queries = ["Do you provide any virtual internship?"]   # default: first 5 eval questions
+
+[quality]
+min_accuracy = 0.85                   # absolute floor for the evaluation set
+min_grounding = 0.95
+max_regression = 0.0                  # reject any drop versus the active version
+min_entries = 10
+grounding_threshold = 0.8             # share of answer words that must come from the KB
+
+[ingestion]
+allowed_extensions = [".csv", ".json", ".md", ".txt"]
+max_file_bytes = 5000000
+encodings = ["utf-8-sig", "cp1252"]   # the current FAQ sheet is Windows-1252
+near_duplicate_threshold = 0.9
+max_question_chars = 500
+max_answer_chars = 8000
+
+[retrieval]
+min_confidence = 0.25                 # below this the question is escalated to staff
+top_k = 3
+
+[security]
+allow_anonymous_chat = true           # students can chat without a token
+max_failed_auth = 5                   # failed logins within the window before lockout
+failed_auth_window_minutes = 10
+lockout_minutes = 15
+injection_block_threshold = 0.7
+injection_suspicious_threshold = 0.4
+max_query_chars = 1000
+pii_allowlist = []                    # public contacts to keep, e.g. ["support@example.com", "@example.com"]
+
+[versions]
+keep = 10
+
+[monitoring]
+window_minutes = 60
+min_samples = 10
+alert_p95_latency_ms = 1500
+alert_error_rate = 0.05
+alert_escalation_rate = 0.35
+alert_min_avg_confidence = 0.35
+alert_auth_failures = 5
+alert_cooldown_minutes = 30

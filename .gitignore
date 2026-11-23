@@ -7,6 +7,13 @@
 # Generated vector database (rebuilt with "Create Knowledgebase")
 faiss_index/
 
+# Knowledge-base pipeline runtime data: versions, quarantine, logs,
+# token hashes and lockout state. Never commit it.
+kb_data/
+
+# Test caches
+.pytest_cache/
+
 # Python cache and build files
 __pycache__/
 *.py[cod]

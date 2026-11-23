@@ -1,66 +1,91 @@
+# Customer Service Chatbot with a Production Knowledge-Base Pipeline
 
-# Generatve AI Q&A: Question and Answer System Based on Google Palm LLM and Langchain for E-learning company  
+A Q&A chatbot for an e-learning company (Nullclass) that sells data courses and
+virtual internships. Learners ask questions in a Streamlit app and get answers
+from the company's FAQ sheet within milliseconds; questions the bot is not
+sure about are escalated to the support team.
 
-This is an end to end LLM project based on Google Palm and Langchain. We are building a Q&A system for an e-learning company called Nullclass.Nullclass sells data related courses and virtual internships. They have thousands of learners who uses discord server or email to ask questions. This system will provide a streamlit based user interface for students where they can ask questions and get answers. 
+The knowledge base is maintained by a production pipeline that only processes
+new or modified documents, detects duplicates, quarantines invalid files,
+versions every update with rollback, runs quality tests before activation,
+activates only inside a maintenance window, rolls back automatically on failed
+health checks, and monitors latency, failures, confidence and escalations.
+See **[docs/PIPELINE.md](docs/PIPELINE.md)** for the full design and runbook.
 
-
-## Project Highlights
-
-- Use a real CSV file of FAQs that Nullclass company is using right now. 
-- Their human staff will use this file to assist their course learners.
-- We will build an LLM based question and answer system that can reduce the workload of their human staff.
-- Students should be able to use this system to ask questions directly and get answers within seconds
-
-
-
-## Installation
-
-1.Clone this repository to your local machine using:
+## Quick start
 
 ```bash
-  git clone https://github.com/aslin72/customer_service_chatbot_LLM.git
+git clone https://github.com/Subhrakantsethi1005/Chatbot.git
+cd Chatbot
+pip install -r requirements.txt
+
+# 1. create your admin token (shown once - keep it safe)
+python kbctl.py bootstrap --name admin
+
+# 2. build the knowledge base from dataset/ (pass the token or set KB_TOKEN)
+python kbctl.py --token <TOKEN> update
+
+# 3. start the chatbot
+streamlit run src/main.py
 ```
-2.Navigate to the project directory:
+
+Updates are only *activated* inside the maintenance window (default 01:00-05:00).
+Outside it, `update` builds and approves the new version and it goes live at the
+next window. To try everything right now, simulate the time:
 
 ```bash
-  cd customer_service_chatbot_LLM
+python kbctl.py --token <TOKEN> --now 2026-11-24T01:30 update
 ```
-3. Install the required dependencies using pip:
+
+For production, keep the scheduler running (daily update at 02:00 by default):
 
 ```bash
-  pip install -r requirements.txt
+python kbctl.py --token <TOKEN> daemon
 ```
-4.Acquire an api key through makersuite.google.com and put it in .env file
+
+## Everyday commands
+
+| Command | Role | What it does |
+|---|---|---|
+| `python kbctl.py status` | viewer | active version, pending update, window, retries |
+| `python kbctl.py versions` | viewer | all versions with accuracy / grounding / status |
+| `python kbctl.py metrics --window 60` | viewer | latency p50/p95/p99, error, escalation and confidence stats |
+| `python kbctl.py alerts` | viewer | recent alerts |
+| `python kbctl.py escalations` | viewer | questions handed to staff |
+| `python kbctl.py quarantine` | viewer | quarantined files and why |
+| `python kbctl.py update` | operator | run an update now |
+| `python kbctl.py activate` | operator | activate the approved update (window only) |
+| `python kbctl.py rollback [--to v000003]` | admin | roll back |
+| `python kbctl.py user-add --name dash --role viewer` | admin | issue a token |
+| `python kbctl.py ask "Do you offer EMI?"` | anyone | ask from the terminal |
+
+The monitoring dashboard is the **Monitoring** page of the Streamlit app (needs a viewer token).
+
+## Project structure
+
+```
+config/pipeline.toml     schedule, window, thresholds, security settings
+config/eval_set.jsonl    quality tests run before every activation
+dataset/                 source documents (.csv / .json / .md / .txt)
+kb_data/                 runtime data: versions, quarantine, logs (git-ignored)
+kbctl.py                 operations CLI
+src/main.py              Streamlit chatbot
+src/pages/1_Monitoring.py  monitoring dashboard
+src/kb_pipeline/         the pipeline package
+tests/                   pytest suite covering every requirement
+src/langchain_helper.py  original Google PaLM version (no longer used; PaLM is shut down)
+```
+
+## Tests
 
 ```bash
-  GOOGLE_API_KEY="your_api_key_here"
-```
-## Usage
-
-1. Run the Streamlit app by executing:
-```bash
-streamlit run main.py
-
+python -m pytest
 ```
 
-2.The web app will open in your browser.
+## Sample questions
 
-- To create a knowledebase of FAQs, click on Create Knolwedge Base button. It will take some time before knowledgebase is created so please wait.
-
-- Once knowledge base is created you will see a directory called faiss_index in your current folder
-
-- Now you are ready to ask questions. Type your question in Question box and hit Enter
-
-## Sample Questions
-  - Do you guys provide internship and also do you offer EMI payments?
-  - Do you have javascript course?
-  - Should I learn power bi or tableau?
-  - I've a MAC computer. Can I use powerbi on it?
-  - I don't see power pivot. how can I enable it?
-
-## Project Structure
-
-- main.py: The main Streamlit application script.
-- langchain_helper.py: This has all the langchain code
-- requirements.txt: A list of required Python packages for the project.
-- .env: Configuration file for storing your Google API key.
+- Do you provide any virtual internship?
+- Should I learn Power BI or Tableau?
+- I have a Mac. Can I use Power BI on it?
+- How do I enable Power Pivot?
+- Do you have a JavaScript course? *(escalated - not in the FAQ)*

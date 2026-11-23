@@ -1,0 +1,10 @@
+[project]
+name = "customer-service-chatbot"
+version = "0.2.0"
+description = "FAQ chatbot with a production knowledge-base update pipeline"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"

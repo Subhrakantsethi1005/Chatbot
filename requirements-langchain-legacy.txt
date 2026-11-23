@@ -1,0 +1,10 @@
+# Original dependencies of src/langchain_helper.py (Google PaLM + LangChain).
+# Kept for reference only: the Google PaLM API has been shut down and the app
+# no longer imports langchain_helper.py.
+langchain==0.0.339
+python-dotenv==1.0.0
+streamlit==1.22.0
+tiktoken==0.4.0
+faiss-cpu==1.7.4
+protobuf~=3.19.0
+sentence-transformer== 2.2.2
